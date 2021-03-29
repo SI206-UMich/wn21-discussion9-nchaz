@@ -6,25 +6,40 @@ import unittest
 # Task 1: Get the URL that links to the Pokemon Charmander's webpage.
 # HINT: You will have to add https://pokemondb.net to the URL retrieved using BeautifulSoup
 def getCharmanderLink(soup):
-    pass
+    extension = soup.find('a', {'href': '/pokedex/charmander'})
+    full_link = "https://pokemondb.net" + extension['href']
+    return full_link
 
 # Task 2: Get the details from the box below "Egg moves". Get all the move names and store
 #         them into a list. The function should return that list of moves.
 def getEggMoves(pokemon):
-    url = 'https://pokemondb.net/pokedex/'+pokemon
-    #add code here
+    url = 'https://pokemondb.net/pokedex/'+ pokemon
+    req = requests.get(url)
+    soup = BeautifulSoup(req.text, "html.parser")
+
+    #initiate list
+    moves = []
+    for move in soup.find('h3', text="Egg moves").find_next('table').find_all('a', class_='ent-name'):
+        moves.append(move.text)
+    return moves
 
 # Task 3: Create a regex expression that will find all the times that have these formats: @2pm @5 pm @10am
 # Return a list of these times without the '@' symbol. E.g. ['2pm', '5 pm', '10am']
 def findLetters(sentences):
     # initialize an empty list
-    
+    lst = []
 
     # define the regular expression
-    
+    r = r'@(\d{1,2}[\s:am|pm]*)'
 
     # loop through each sentence or phrase in sentences
-    
+    for phrase in sentences:
+        x = re.findall(r, phrase)
+        
+        for sentence in x:
+            lst.append(sentence.strip())
+
+    return lst
 
     # find all the words that match the regular expression in each sentence
        
